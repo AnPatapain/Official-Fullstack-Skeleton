@@ -64,11 +64,27 @@ export class UserRepository {
                 name: userCreationData.name,
                 password: userCreationData.password,
                 role: 'user' as UserRole,
+                verified: userCreationData.verified,
             },
         });
         return {
             ...createdUser,
             role: createdUser.role as UserRole,
+        }
+    }
+
+    public async updateOne(id: number, userEditData: Partial<Omit<User, "id">>) {
+        const updatedUser = await PRISMA_CLIENT.user.update({
+            where: {
+                id: id,
+            },
+            data: {
+                ...userEditData
+            }
+        });
+        return {
+            ...updatedUser,
+            role: updatedUser.role as UserRole,
         }
     }
 }

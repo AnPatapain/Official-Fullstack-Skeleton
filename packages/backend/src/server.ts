@@ -49,9 +49,6 @@ app.use(function errorHandler(
     next();
 });
 
-// Check BackendConfig
-console.log("Backend Config::", CONFIG);
-
 // Seed data (only in development environment)
 if (CONFIG.NODE_ENV === 'development') {
     await seed();

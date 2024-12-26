@@ -6,7 +6,9 @@ type APIErrorCode =
     | 'ERR_PERMISSION_DENIED'
     | 'ERR_VALIDATION'
     | 'ERR_USER_ALREADY_EXISTS'
+    | 'ERR_USER_NOT_VERIFIED'
     | 'ERR_USERNAME_PASSWORD_INVALID'
+    | 'ERR_SECURITY_CONTEXT_NOT_SET'
 
 export type APIErrorType = {
     code: APIErrorCode,

@@ -13,15 +13,23 @@ config({path: resolve(__dirname, "../.env")});
 
 type EnvironmentConfig = {
     NODE_ENV?: 'development' | 'production' | 'test',
-    DATABASE_URL?: string;
-    HMAC_SECRET?: string
+    DATABASE_URL?: string,
+    HMAC_SECRET?: string,
+    PUBLIC_URL?: string,
+    SMTP_HOST?: string,
+    SMTP_PORT?: string,
+    SMTP_USER?: string,
+    SMTP_PASSWORD?: string,
 };
 
 const env: EnvironmentConfig = process.env as any;
 
 export const CONFIG: typeof env= {
-    // Default value, in production, these variables will be overwritten by ...env
+    // Default value, these variables can be overwritten by ...env
     NODE_ENV: 'development',
     HMAC_SECRET: 'devsecret',
-    ...env
+    PUBLIC_URL: 'https://localhost',
+    ...env,
+    SMTP_HOST: env.NODE_ENV === 'development' ? 'mailhog' : env.SMTP_HOST,
+    SMTP_PORT: env.NODE_ENV === 'development' ? '1025' : env.SMTP_PORT
 }

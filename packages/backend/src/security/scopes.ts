@@ -1,4 +1,5 @@
 import {UserRole} from "@app/shared-models/src/user.model";
+import {Token} from "@app/shared-models/src/token.model";
 
 export type SecurityScope =
     | 'user.read'           // read all users
@@ -21,7 +22,7 @@ export const ADMIN_SCOPES: Set<SecurityScope> = new Set<SecurityScope>([
     'user.write',
 ]);
 
-export function getScopesForRole(userRole: UserRole) {
+export function getScopesBasedOnUserRoleOrTokenType(userRole: UserRole, token: Token) {
     if (userRole === 'user') {
         return USER_SCOPES;
     } else if (userRole === 'admin') {

@@ -1,8 +1,9 @@
 import express from "express";
-import {getScopesForRole, SecurityScope} from "./scopes";
+import {getScopesBasedOnUserRoleOrTokenType, SecurityScope} from "./scopes";
 import {APIError} from "@app/shared-models/src/error.type";
 import {verifyToken} from "../services/auth.service";
 import {UserRepository} from "../repositories/user.repository";
+import {User} from "@app/shared-models/src/user.model";
 
 export async function expressAuthentication(
     req: express.Request,
@@ -27,7 +28,7 @@ export async function expressAuthentication(
             throw new APIError(403, 'ERR_TOKEN_SUBJECT_INVALID');
         }
 
-        const userScopes = getScopesForRole(user.role);
+        const userScopes = getScopesBasedOnUserRoleOrTokenType(user.role, token);
         for (let requiredScope of scopes as SecurityScope[]) {
             if (!userScopes.has(requiredScope)) {
                 throw new APIError(403, 'ERR_PERMISSION_DENIED');
@@ -41,5 +42,15 @@ export async function expressAuthentication(
     } else {
         console.error("Unknown security method");
     }
+}
+
+/**
+ * Get current user who performs the request
+ */
+export function getCurrentUser(req: express.Request): User {
+    if (req.securityContext) {
+        return req.securityContext.user;
+    }
+    throw new APIError(403, 'ERR_SECURITY_CONTEXT_NOT_SET');
 }
 

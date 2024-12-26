@@ -31,6 +31,9 @@
 					},
 					"role": {
 						"$ref": "#/components/schemas/UserRole"
+					},
+					"verified": {
+						"type": "boolean"
 					}
 				},
 				"required": [
@@ -38,12 +41,13 @@
 					"email",
 					"password",
 					"name",
-					"role"
+					"role",
+					"verified"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Pick_User.Exclude_keyofUser.id-or-role__": {
+			"Pick_User.Exclude_keyofUser.id-or-role-or-verified__": {
 				"properties": {
 					"email": {
 						"type": "string"
@@ -63,12 +67,12 @@
 				"type": "object",
 				"description": "From T, pick a set of properties whose keys are in the union K"
 			},
-			"Omit_User.id-or-role_": {
-				"$ref": "#/components/schemas/Pick_User.Exclude_keyofUser.id-or-role__",
+			"Omit_User.id-or-role-or-verified_": {
+				"$ref": "#/components/schemas/Pick_User.Exclude_keyofUser.id-or-role-or-verified__",
 				"description": "Construct a type with the properties of T except for those in type K."
 			},
 			"UserCreationRequest": {
-				"$ref": "#/components/schemas/Omit_User.id-or-role_"
+				"$ref": "#/components/schemas/Omit_User.id-or-role-or-verified_"
 			},
 			"APIErrorCode": {
 				"type": "string",
@@ -80,7 +84,9 @@
 					"ERR_PERMISSION_DENIED",
 					"ERR_VALIDATION",
 					"ERR_USER_ALREADY_EXISTS",
-					"ERR_USERNAME_PASSWORD_INVALID"
+					"ERR_USER_NOT_VERIFIED",
+					"ERR_USERNAME_PASSWORD_INVALID",
+					"ERR_SECURITY_CONTEXT_NOT_SET"
 				]
 			},
 			"APIErrorType": {
@@ -191,7 +197,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "string"
+									"$ref": "#/components/schemas/User"
 								}
 							}
 						}
@@ -219,6 +225,44 @@
 						}
 					}
 				}
+			}
+		},
+		"/api/auth/verify/{token}": {
+			"get": {
+				"operationId": "VerifyAccount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIErrorType"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/api/auth/signin": {

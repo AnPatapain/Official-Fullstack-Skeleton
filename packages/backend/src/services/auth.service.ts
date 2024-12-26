@@ -1,11 +1,22 @@
 import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
-import {TokenCreationData} from "@app/shared-models/src/token.model";
+import {TokenCreationData, TokenType} from "@app/shared-models/src/token.model";
 import {TokenRepository} from "../repositories/token.repository";
-import {DAY_MS} from "@app/shared-utils/src/daytime-utils";
+import {DAY_MS, HOUR_MS, MINUTE_MS} from "@app/shared-utils/src/daytime-utils";
 import {CONFIG} from "../backend-config";
 
-const TOKEN_DURATION = 10 * DAY_MS;
+const API_TOKEN_DURATION = 10 * DAY_MS;
+const VERIFICATION_TOKEN_DURATION = HOUR_MS;
+
+function getTokenDuration(tokenType: TokenType): number {
+    if (tokenType === 'api') {
+        return API_TOKEN_DURATION;
+    } else if (tokenType === 'account_verification') {
+        return VERIFICATION_TOKEN_DURATION;
+    } else {
+        return API_TOKEN_DURATION;
+    }
+}
 
 export function generatePasswordHashed(password: string): string {
     return bcrypt.hashSync(password, bcrypt.genSaltSync());
@@ -15,7 +26,7 @@ export function verifyPassword(password: string, hashedPassword: string): boolea
     return bcrypt.compareSync(password, hashedPassword);
 }
 
-export async function generateAndReturnAPIToken(tokenCreationData: TokenCreationData): Promise<string> {
+export async function generateAndReturnToken(tokenCreationData: TokenCreationData): Promise<string> {
     const rawToken = "sk_" + crypto.randomUUID().toString();
     /**
      * Token is sensitive data => irreversibly hash it and store in database
@@ -34,7 +45,7 @@ export async function generateAndReturnAPIToken(tokenCreationData: TokenCreation
         userId: tokenCreationData.userId,
         tokenType: tokenCreationData.tokenType,
         createdAt: new Date(),
-        expiredAt: new Date(new Date().getTime() + TOKEN_DURATION),
+        expiredAt: new Date(new Date().getTime() + getTokenDuration(tokenCreationData.tokenType)),
     })
     return rawToken;
 }

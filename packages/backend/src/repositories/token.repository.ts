@@ -25,6 +25,14 @@ export class TokenRepository {
         } : null;
     }
 
+    public async deleteMany(criteria: Partial<Token>): Promise<void> {
+        await PRISMA_CLIENT.token.deleteMany({
+            where: {
+                ...criteria,
+            }
+        })
+    }
+
     public async createOne(tokenCreationData: Omit<Token, 'id'>): Promise<Token> {
         const createdToken = await PRISMA_CLIENT.token.create({
             data: {
