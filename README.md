@@ -10,112 +10,85 @@
 ![Tsoa 6.x.x](https://img.shields.io/badge/tsoa-6.4.0-green.svg)
 ![Swagger 5.x.x](https://img.shields.io/badge/swagger_api_docs-5.0.1-green.svg)
 
-This project provides a production-ready fullstack web application setup. It 
-includes infrastructure for containerization (via Docker), reverse proxy 
-(using Nginx), and core features like user authentication, authorization, 
-and automatic API documentation. An automated testing system is also implemented 
-for unit tests, end-to-end tests (E2E), and performance tests.
+This project provides a production-ready fullstack application skeleton. It 
+includes infrastructure like: containerization (via Docker), reverse proxy 
+(using Nginx), and core features like: API-Access-Token, OpenAPI Docs. 
+An automated testing system is also implemented for unit tests, end-to-end tests (E2E) 
+and performance tests.
 
 By using Docker, the project manages development, testing, and production 
-environments, minimizing dependencies on your host machine. 
-Simply install Docker, and you're ready to go.
+environments, avoiding populating your host machine. Simply install Docker, and you're ready to go.
 
 
 **Fullstack Skeleton overview**
-- **Infrastructure:** Nginx, Docker, TLS-SSL for local development environment
-- **Architecture:** Layered architecture for backend
-- **Programming paradigms:** OOP for backend, Functional Programming for frontend using React
-- **Automation Test (TODO: nyi):** Unit Test, End-to-End test (E2E), Performance Test
+- **Infrastructure:** Nginx, Docker, Postgresql, TLS-SSL for local development environment
 - **Programming Language:** Typescript, Bash Script
 - **Backend:** Express (server framework), Tsoa-Swagger(controller & auto API docs), Postgresql (relational database), Prisma (ORM) 
 - **Frontend:** React
+- **Automation Test (TODO: nyi):** Unit Test, End-to-End test (E2E), Performance Test
 ## Table of Contents
-- [Project structure](#project-structure)
 - [How to run](#how-to-run)
-- [Configuration](#configuration)
 - [Architecture](#architecture-)
 - [TODO](#todo)
-
-
-## Project structure
-This boilerplate use **pnpm**, a package manager to set up a workspace 
-multi-package.
-- **packages/**  
-  Sub-packages for different project aspects (backend, frontend, etc.).
-
-- **infrastructure/**  
-  Contain entrypoint for running application and the files for infrastructure set up: Container (Docker), 
-Reverse Proxy (Nginx), local TLS-SSL certificates.
-
-- **static/**  
-  Images for Docs.
-
-- **.dockerignore**  
-  Specifies files ignored by Docker; handles HTTPS via Nginx.
-
-- **.gitignore**  
-  Lists files not tracked by Git.
-
-- **README.md**  
-  Project overview, setup instructions, and docs.
-
-- **package.json**  
-  Defines global project dependencies and scripts (using `pnpm`). Each package inside
-the folder `packages/` has also its own package.json
-
-- **pnpm-lock.yaml**  
-  Lock file ensuring consistent dependency versions.
-
-- **pnpm-workspace.yaml**  
-  Workspace settings for managing monorepo with `pnpm`.
-In addition
+- 
 
 ## How to run
-From root project, `./scripts/run.sh` is the entry point 
-command to run different environments: development, production, test, 
+First, make sure you have .env file in your root project with these values:
+```shell
+POSTGRES_USER=<username>
+POSTGRES_PASSWORD=<password>
+POSTGRES_DB=<database>
+DATABASE_URL="postgresql://<username>:<password>@postgres-db:5432/<database>?schema=public"
+HMAC_SECRET=<your secret string>
+```
+From root project, `./infrastructure/run.sh` is the entry point
+command to run different environments: development, production, test,
 reset environment, etc.
 #### Manual
-To see all options of the command `./scripts/run.sh` run:
+To see all options of the command `./infrastructure/run.sh` run:
 ``` bash
-./scripts/run.sh --help
+./infrastructure/run.sh --help
 ```
 #### Check prerequisite installed
-To check whether your environment has the prerequisite to run the boilerplate. Run
+To list all prerequisite. Run:
 ``` bash
-./scripts/run.sh prerequisite
+./infrastructure/run.sh list-prerequisite
+```
+To check prerequisite on your environment. Run:
+``` bash
+./infrastructure/run.sh prerequisite
 ```
 #### Development
-In development mode: 
+In development mode:
 - Frontend is served by Vite server with hot module reload
 - Typescript files will not be pre-transpiled to javascript but be transpiled
-in run-time by ts-node
+  in run-time by ts-node
 - Mock data seed for development
 - Fake email smtp server
 
 To run development mode
 ``` bash
-./scripts/run.sh dev
+./infrastructure/run.sh dev
 ```
-#### Production
+#### Production (Not work for now)
 In production mode:
 - Frontend is built to single javascript file and served by Nginx
-- Backend is transpiled from Typescript to Javascript to be run
 - The mock data will not be seed
 
 To run application in production mode
 ``` bash
-./scripts/run.sh prod
+./infrastructure/run.sh prod
 ```
-#### Reset
-To reset application environment.
+#### Clean
+To clean application environment.
 ``` bash
-./scripts/run.sh reset
-```  
-Best practice: Always run ```./scripts/run.sh reset``` before running ```./scripts/run.sh dev``` and ```./scripts/run.sh prod``` to avoid weird errors.
+./infrastructure/run.sh clean
+```
+Best practice: Always run ```./infrastructure/run.sh clean``` before running
+```./infrastructure/run.sh dev``` and ```./infrastructure/run.sh prod```
 
 #### Install package
-Best practice: Run `./scripts/run.sh reset` before running any commands
-bellow
+Best practice: Run `./infrastructure/run.sh clean` before running any below commands
 
 
 To install every dependencies listed in packages/*/package.json
@@ -124,27 +97,28 @@ pnpm install
 ```  
 To install dev-dependency for specific package
 ``` bash
-pnpm --filter <backend | frontend | shared | models> add --save-dev <package>
+pnpm --filter <backend | frontend | shared-utils | shared-models> add --save-dev <package>
 ```  
 
 To install dependency for specific package
 ``` bash
-pnpm --filter <backend | frontend | shared | models> add <package>
-```  
+pnpm --filter <backend | frontend | shared-utils | shared-models> add <package>
+```
 
-## Configuration
-To change the name of docker containers, go to scripts/run.sh and changes the values of these variables:
-``` bash
-#!/bin/bash
+#### Working with prisma
+Typically, workflows is around changing the model schema, to do that, you need:
+1. Stop application (if you already run it)
+2. Change your schema in packages/backend/prisma/schema.prisma
+3. Start application again (./entrypoint.sh dev). Prisma will automatically create
+   a sql script reflecting your schema change. This script is called `migration` and will be
+   in packages/backend/prisma/migrations
+4. In case your `migration` is failed, you need to stop application, manually delete the migration in folder
+   packages/backend/prisma/migrations and start your application again.
 
-# Define the container name for dev local
-export APP_DEV_CONTAINER="app-dev"
-export NGINX_REVERSE_PROXY_DEV_CONTAINER="nginx-reverse-proxy-dev"
-
-# Define the container name for production
-export BACKEND_PROD_CONTAINER="backend-prod" 
-export NGINX_REVERSE_PROXY_PROD_CONTAINER="nginx-reverse-proxy-prod"
-...
+Note: Whenever change a model inside schema.prisma, always clean restart app:
+```shell
+./infrastructure/entrypoint.sh clean
+./infrastructure/entrypoint.sh dev
 ```
 
 ## Architecture  

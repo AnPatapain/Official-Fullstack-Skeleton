@@ -144,6 +144,7 @@ check_prerequisite() {
     echo "   POSTGRES_PASSWORD=<password>"
     echo "   POSTGRES_DB=<database>"
     echo "   DATABASE_URL=\"postgresql://<username>:<password>@postgres-db:5432/<database>?schema=public\""
+    echo "   HMAC_SECRET=<your secret string>"
     echo ""
     echo "   Note: postgres-db is the service name of postgres defined in docker-compose.local and docker-compose.prod"
     echo ""

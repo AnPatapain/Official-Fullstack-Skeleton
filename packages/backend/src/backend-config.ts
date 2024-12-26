@@ -20,6 +20,7 @@ type EnvironmentConfig = {
 const env: EnvironmentConfig = process.env as any;
 
 export const CONFIG: typeof env= {
+    // Default value, in production, these variables will be overwritten by ...env
     NODE_ENV: 'development',
     HMAC_SECRET: 'devsecret',
     ...env
