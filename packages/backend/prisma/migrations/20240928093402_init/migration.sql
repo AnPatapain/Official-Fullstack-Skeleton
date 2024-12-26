@@ -9,7 +9,7 @@ CREATE TABLE "Message" (
 );
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "UserModel" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT,
@@ -21,7 +21,7 @@ CREATE TABLE "User" (
 CREATE UNIQUE INDEX "Message_userId_key" ON "Message"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "UserModel"("email");
 
 -- AddForeignKey
-ALTER TABLE "Message" ADD CONSTRAINT "Message_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Message" ADD CONSTRAINT "Message_userId_fkey" FOREIGN KEY ("userId") REFERENCES "UserModel"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

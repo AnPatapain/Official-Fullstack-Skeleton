@@ -1,4 +1,4 @@
-import {UserRepository} from "./repositories/UserRepository";
+import {UserRepository} from "./repositories/user.repository";
 
 const userRepository = UserRepository.getInstance();
 
@@ -29,13 +29,4 @@ async function checkOneOfReposIsEmpty() {
 }
 
 async function seedUser() {
-    await userRepository.createOne({
-        email: "nkalk192002@gmail.com",
-        name: "kean"
-    });
-
-    await userRepository.createOne({
-        email: "tuan.nguyen@gmail.com",
-        name: "tupac",
-    });
 }

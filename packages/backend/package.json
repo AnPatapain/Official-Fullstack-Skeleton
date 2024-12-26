@@ -9,19 +9,18 @@
     "dev": "pnpm run prisma:create_tables && pnpm run prisma:generate_client && nodemon --watch 'src/**/*' --ext ts --exec 'pnpm run build:tsoa && ts-node --project tsconfig.json src/server.ts'",
     "-------- Build scripts --------": "",
     "build:tsoa": "tsoa spec-and-routes",
-    "build": "pnpm run prisma:create_tables && pnpm run prisma:generate_client && pnpm run build:tsoa && tsc --project tsconfig.build.json && node ../../infrastructure/utils-scripts/post-backend-build.cjs",
-    "-------- Prod scripts --------": "",
-    "prod": "node dist/src/server.js",
     "-------- Other scripts --------": "",
     "prisma:create_tables": "prisma migrate dev --name create_tables",
     "prisma:generate_client": "prisma generate"
   },
   "dependencies": {
-    "@app/shared-utils": "workspace:*",
     "@app/shared-models": "workspace:*",
+    "@app/shared-utils": "workspace:*",
     "@prisma/client": "5.20.0",
     "@tsoa/runtime": "^6.4.0",
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
+    "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "swagger-ui-express": "^5.0.1",
@@ -32,7 +31,7 @@
     "@types/swagger-ui-express": "^4.1.6",
     "nodemon": "^3.1.0",
     "prisma": "^5.20.0",
-    "typescript": "^5.2.2",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.2.2"
   }
 }

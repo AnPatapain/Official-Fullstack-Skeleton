@@ -11,12 +11,16 @@ const __dirname = path.dirname(__filename); // get the name of the directory
 
 config({path: resolve(__dirname, "../.env")});
 
-type BackendConfigType = {
-    mode: "development" | "production" | "test",
-    dbConnectionUrl: string
-}
+type EnvironmentConfig = {
+    NODE_ENV?: 'development' | 'production' | 'test',
+    DATABASE_URL?: string;
+    HMAC_SECRET?: string
+};
 
-export const BackendConfig: BackendConfigType = {
-    mode: (process.env.NODE_ENV as "development" | "production" | "test") || "development",
-    dbConnectionUrl: process.env.DATABASE_URL as string,
+const env: EnvironmentConfig = process.env as any;
+
+export const CONFIG: typeof env= {
+    NODE_ENV: 'development',
+    HMAC_SECRET: 'devsecret',
+    ...env
 }

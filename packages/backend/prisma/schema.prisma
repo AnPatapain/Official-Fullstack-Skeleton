@@ -12,17 +12,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Message {
+model Token {
   id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
+  hash      String   @unique
+  tokenType String
   userId    Int
-  timeStamp DateTime
-  content   String
+  createdAt DateTime
+  expiredAt DateTime
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  name     String?
-  messages Message[]
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  name     String
+  role     String
 }

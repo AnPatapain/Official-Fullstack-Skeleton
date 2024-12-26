@@ -1,12 +1,20 @@
 {
   "entryFile": "src/server.ts",
   "noImplicitAdditionalProperties": "silently-remove-extras",
-  "controllerPathGlobs": ["src/controllers/*Controller.ts"],
+  "controllerPathGlobs": ["src/controllers/*.controller.ts"],
   "spec": {
     "outputDirectory": "tsoa",
-    "specVersion": 3
+    "specVersion": 3,
+    "securityDefinitions": {
+      "token": {
+        "type": "apiKey",
+        "name": "x-access-token",
+        "in": "header"
+      }
+    }
   },
   "routes": {
-    "routesDir": "tsoa"
+    "routesDir": "tsoa",
+    "authenticationModule": "src/security/auth.handler.ts"
   }
 }

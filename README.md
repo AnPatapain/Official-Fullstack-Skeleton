@@ -159,6 +159,6 @@ export NGINX_REVERSE_PROXY_PROD_CONTAINER="nginx-reverse-proxy-prod"
 - [ ] Restrict import from some package  
 - [ ] Script to check the prerequisite or install them maybe ?
 - [ ] Synchronize router, controller, API docs
-- [ ] User authentication, MFA
+- [ ] UserModel authentication, MFA
 - [ ] End-to-End test, Security test, Performance test.
 

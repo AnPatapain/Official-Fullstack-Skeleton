@@ -7,32 +7,12 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Message": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					},
-					"timeStamp": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"content": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"userId",
-					"timeStamp",
-					"content"
-				],
-				"type": "object",
-				"additionalProperties": false
+			"UserRole": {
+				"type": "string",
+				"enum": [
+					"user",
+					"admin"
+				]
 			},
 			"User": {
 				"properties": {
@@ -43,28 +23,107 @@
 					"email": {
 						"type": "string"
 					},
-					"name": {
-						"type": "string",
-						"nullable": true
+					"password": {
+						"type": "string"
 					},
-					"messages": {
-						"items": {
-							"$ref": "#/components/schemas/Message"
-						},
-						"type": "array"
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
 					}
 				},
 				"required": [
 					"id",
 					"email",
+					"password",
 					"name",
-					"messages"
+					"role"
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"Pick_User.Exclude_keyofUser.id-or-role__": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password",
+					"name"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_User.id-or-role_": {
+				"$ref": "#/components/schemas/Pick_User.Exclude_keyofUser.id-or-role__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"UserCreationRequest": {
+				"$ref": "#/components/schemas/Omit_User.id-or-role_"
+			},
+			"APIErrorCode": {
+				"type": "string",
+				"enum": [
+					"ERR_UNKNOWN",
+					"ERR_TOKEN_MISSING_IN_HEADER",
+					"ERR_TOKEN_INVALID",
+					"ERR_TOKEN_SUBJECT_INVALID",
+					"ERR_PERMISSION_DENIED",
+					"ERR_VALIDATION",
+					"ERR_USER_ALREADY_EXISTS",
+					"ERR_USERNAME_PASSWORD_INVALID"
+				]
+			},
+			"APIErrorType": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"code": {
+						"$ref": "#/components/schemas/APIErrorCode"
+					}
+				},
+				"required": [
+					"code"
+				],
+				"type": "object"
+			},
+			"Pick_User.email-or-password_": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"LoginRequest": {
+				"$ref": "#/components/schemas/Pick_User.email-or-password_"
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"token": {
+				"type": "apiKey",
+				"name": "x-access-token",
+				"in": "header"
+			}
+		}
 	},
 	"info": {
 		"title": "@app/backend",
@@ -72,9 +131,32 @@
 		"contact": {}
 	},
 	"paths": {
+		"/api/users/current": {
+			"get": {
+				"operationId": "GetCurrentUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"token": [
+							"user:current.read"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
 		"/api/users": {
 			"get": {
-				"operationId": "GetUsers",
+				"operationId": "GetAllUsers",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -90,44 +172,92 @@
 						}
 					}
 				},
-				"description": "Retrieves a list of all users",
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"user.read"
+						]
+					}
+				],
 				"parameters": []
 			}
 		},
-		"/api/users/{userId}": {
-			"get": {
-				"operationId": "GetUsersById",
+		"/api/auth/signup": {
+			"post": {
+				"operationId": "Signup",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"allOf": [
-										{
-											"$ref": "#/components/schemas/User"
-										}
-									],
-									"nullable": true
+									"type": "string"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIErrorType"
 								}
 							}
 						}
 					}
 				},
-				"description": "Retrieves user by userId",
 				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCreationRequest"
+							}
 						}
 					}
-				]
+				}
+			}
+		},
+		"/api/auth/signin": {
+			"post": {
+				"operationId": "Signin",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "string"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIErrorType"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					}
+				}
 			}
 		}
 	},
