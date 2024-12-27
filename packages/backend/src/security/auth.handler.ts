@@ -12,9 +12,10 @@ export async function expressAuthentication(
 ): Promise<any> {
     // securityName 'token' were configured in tsoa.json file.
     if (securityName === 'token') {
-        const rawToken = req.headers['x-access-token'];
+        const rawToken = req.headers['x-api-key'] || req.query['token'];
+
         if (!rawToken || typeof rawToken !== 'string') {
-            throw new APIError(403, 'ERR_TOKEN_MISSING_IN_HEADER');
+            throw new APIError(403, 'ERR_TOKEN_MISSING_IN_HEADER_OR_REQ_QUERY');
         }
 
         const token = await verifyToken(rawToken);

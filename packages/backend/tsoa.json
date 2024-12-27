@@ -8,7 +8,7 @@
     "securityDefinitions": {
       "token": {
         "type": "apiKey",
-        "name": "x-access-token",
+        "name": "x-api-key",
         "in": "header"
       }
     }

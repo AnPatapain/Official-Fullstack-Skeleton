@@ -78,7 +78,7 @@
 				"type": "string",
 				"enum": [
 					"ERR_UNKNOWN",
-					"ERR_TOKEN_MISSING_IN_HEADER",
+					"ERR_TOKEN_MISSING_IN_HEADER_OR_REQ_QUERY",
 					"ERR_TOKEN_INVALID",
 					"ERR_TOKEN_SUBJECT_INVALID",
 					"ERR_PERMISSION_DENIED",
@@ -126,7 +126,7 @@
 		"securitySchemes": {
 			"token": {
 				"type": "apiKey",
-				"name": "x-access-token",
+				"name": "x-api-key",
 				"in": "header"
 			}
 		}
@@ -227,7 +227,7 @@
 				}
 			}
 		},
-		"/api/auth/verify/{token}": {
+		"/api/auth/verify": {
 			"get": {
 				"operationId": "VerifyAccount",
 				"responses": {
@@ -240,22 +240,18 @@
 								}
 							}
 						}
-					},
-					"401": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/APIErrorType"
-								}
-							}
-						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"token": [
+							"user:current.verify"
+						]
+					}
+				],
 				"parameters": [
 					{
-						"in": "path",
+						"in": "query",
 						"name": "token",
 						"required": true,
 						"schema": {

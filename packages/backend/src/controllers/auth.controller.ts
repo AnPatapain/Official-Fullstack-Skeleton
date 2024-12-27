@@ -1,4 +1,4 @@
-import {Body, Controller, Get, NoSecurity, Post, Request, Res, Route, type TsoaResponse} from "tsoa";
+import {Body, Controller, Get, NoSecurity, Post, Query, Request, Res, Route, Security, type TsoaResponse} from "tsoa";
 import {type LoginRequest, type UserCreationRequest} from "@app/shared-models/src/api.type";
 import {UserRepository} from "../repositories/user.repository";
 import {APIErrorType} from "@app/shared-models/src/error.type";
@@ -9,6 +9,7 @@ import {User} from "@app/shared-models/src/user.model";
 import {VERIFICATION_EMAIL_TEMPLATE} from "../utils/email-template";
 import {CONFIG} from "../backend-config";
 import {TokenRepository} from "../repositories/token.repository";
+import {getCurrentUser} from "../security/auth.handler";
 
 @Route('/api/auth')
 export class AuthController extends Controller {
@@ -40,25 +41,13 @@ export class AuthController extends Controller {
         return createdUser;
     }
 
-    @Get('verify/{token}')
-    @NoSecurity()
+    @Get('verify')
+    @Security('token', ['user:current.verify'])
     public async verifyAccount(
-        token: string,
         @Request() req: express.Request,
-        @Res() errTokenInvalid: TsoaResponse<401, APIErrorType>,
+        @Query() token: string
     ) {
-        const tokenEntity = await verifyToken(token);
-        if (!tokenEntity) {
-            throw errTokenInvalid(401, {
-                code: 'ERR_TOKEN_INVALID',
-            })
-        }
-        const user = await this.userRepository.findOneById(tokenEntity.userId);
-        if (!user) {
-            throw errTokenInvalid(401, {
-                code: 'ERR_TOKEN_INVALID',
-            })
-        }
+        const user = getCurrentUser(req);
         await this.userRepository.updateOne(user.id, {
             verified: true,
         });
@@ -106,11 +95,13 @@ export class AuthController extends Controller {
             userId: user.id,
         });
 
+        const verificationEndpoint = `${CONFIG.PUBLIC_URL}/api/auth/verify?token=${verificationToken}`;
+
         sendEmail(
             user.email,
             'Verify account',
-            `Click this link to verify account: ${CONFIG.PUBLIC_URL + '/api/auth/verify/' + verificationToken}`,
-            VERIFICATION_EMAIL_TEMPLATE(verificationToken)
+            `Click this link to verify account: ${verificationEndpoint}`,
+            VERIFICATION_EMAIL_TEMPLATE(verificationEndpoint)
         );
     }
 }

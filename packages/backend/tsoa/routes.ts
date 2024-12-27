@@ -52,7 +52,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "APIErrorCode": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["ERR_UNKNOWN"]},{"dataType":"enum","enums":["ERR_TOKEN_MISSING_IN_HEADER"]},{"dataType":"enum","enums":["ERR_TOKEN_INVALID"]},{"dataType":"enum","enums":["ERR_TOKEN_SUBJECT_INVALID"]},{"dataType":"enum","enums":["ERR_PERMISSION_DENIED"]},{"dataType":"enum","enums":["ERR_VALIDATION"]},{"dataType":"enum","enums":["ERR_USER_ALREADY_EXISTS"]},{"dataType":"enum","enums":["ERR_USER_NOT_VERIFIED"]},{"dataType":"enum","enums":["ERR_USERNAME_PASSWORD_INVALID"]},{"dataType":"enum","enums":["ERR_SECURITY_CONTEXT_NOT_SET"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["ERR_UNKNOWN"]},{"dataType":"enum","enums":["ERR_TOKEN_MISSING_IN_HEADER_OR_REQ_QUERY"]},{"dataType":"enum","enums":["ERR_TOKEN_INVALID"]},{"dataType":"enum","enums":["ERR_TOKEN_SUBJECT_INVALID"]},{"dataType":"enum","enums":["ERR_PERMISSION_DENIED"]},{"dataType":"enum","enums":["ERR_VALIDATION"]},{"dataType":"enum","enums":["ERR_USER_ALREADY_EXISTS"]},{"dataType":"enum","enums":["ERR_USER_NOT_VERIFIED"]},{"dataType":"enum","enums":["ERR_USERNAME_PASSWORD_INVALID"]},{"dataType":"enum","enums":["ERR_SECURITY_CONTEXT_NOT_SET"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "APIErrorType": {
@@ -181,11 +181,11 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAuthController_verifyAccount: Record<string, TsoaRoute.ParameterSchema> = {
-                token: {"in":"path","name":"token","required":true,"dataType":"string"},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
-                errTokenInvalid: {"in":"res","name":"401","required":true,"ref":"APIErrorType"},
+                token: {"in":"query","name":"token","required":true,"dataType":"string"},
         };
-        app.get('/api/auth/verify/:token',
+        app.get('/api/auth/verify',
+            authenticateMiddleware([{"token":["user:current.verify"]}]),
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
             ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.verifyAccount)),
 
