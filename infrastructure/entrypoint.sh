@@ -192,7 +192,6 @@ sync_env_files() {
 run_prod() {
   sync_env_files
   export DOCKER_PROD_ENTRY_CMD="pnpm i && pnpm run dev:backend"
-  pnpm run build # build the frontend and mount to docker that runs nginx so that nginx can serve public fe file.
   docker compose -f "${DOCKER_COMPOSE_PROD}" build --no-cache
   docker compose -f "${DOCKER_COMPOSE_PROD}" up --remove-orphans -d
   docker compose -f "${DOCKER_COMPOSE_PROD}" logs -f app-backend-prod
