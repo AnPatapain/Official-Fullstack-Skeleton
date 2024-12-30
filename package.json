@@ -14,8 +14,7 @@
     "build": "pnpm install && pnpm run build:frontend",
     "preview": "vite preview",
     "-------- Prod scripts --------": "",
-    "prod:backend": "pnpm --filter backend run prod",
-    "prod": "pnpm run prod:backend"
+    "prod": "pnpm --filter backend run prod"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^7.2.0",
