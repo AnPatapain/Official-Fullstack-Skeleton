@@ -23,3 +23,5 @@ services:
     ports:
       - "8080:8080"
     user: "${DOCKER_UID}:${DOCKER_UID}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
