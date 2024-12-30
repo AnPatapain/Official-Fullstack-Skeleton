@@ -9,7 +9,7 @@ version: '1.29.2'
 
 services:
   app-backend-prod:
-    container_name: ${BACKEND_PROD_CONTAINER}
+    container_name: app-backend-prod
     build:
       context: ..
       dockerfile_inline: |
@@ -23,34 +23,3 @@ services:
     ports:
       - "8080:8080"
     user: "${DOCKER_UID}:${DOCKER_UID}"
-    depends_on:
-      - postgres-db
-
-  postgres-db:
-    image: postgres:14-alpine
-    container_name: ${DATABASE_CONTAINER}
-    restart: always
-    shm_size: 128mb
-    ports:
-      - "5432:5432"
-    env_file:
-      - "../../.env"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  nginx-reverse-proxy-prod:
-    container_name: ${NGINX_REVERSE_PROXY_PROD_CONTAINER}
-    image: nginx:alpine
-    volumes:
-      - "${ROOT_PROJECT}/packages/frontend/dist:/var/www/html"
-      - "${NGINX_PROD}:/etc/nginx/conf.d/nginx-prod.conf:Z"
-      - "${TLS_DIR}:/etc/nginx/certs"
-    ports:
-     - "443:443"
-     - "80:80"
-    depends_on:
-      - app-backend-prod
-
-volumes:
-  postgres_data:
-    name: postgres_data

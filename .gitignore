@@ -13,8 +13,6 @@ packages/*/node_modules
 dist
 dist-ssr
 *.local
-infrastructure/nginx/nginx-dev.conf
-infrastructure/nginx/nginx-prod.conf
 data
 packages/backend/.env
 .env

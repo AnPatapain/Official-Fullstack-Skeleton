@@ -10,7 +10,7 @@ version: '1.29.2'
 
 services:
   app-dev:
-    container_name: ${APP_DEV_CONTAINER}
+    container_name: app-dev
     build:
       context: ..
       dockerfile_inline: |
@@ -30,7 +30,7 @@ services:
 
   postgres-db:
     image: postgres:14-alpine
-    container_name: ${DATABASE_CONTAINER}
+    container_name: postgres-db
     restart: always
     shm_size: 128mb
     ports:
@@ -48,7 +48,7 @@ services:
       - "8025:8025" # web ui
 
   nginx-reverse-proxy-dev:
-    container_name: ${NGINX_REVERSE_PROXY_DEV_CONTAINER}
+    container_name: nginx-reverse-proxy-dev
     image: nginx:alpine
     volumes:
       - "${NGINX_DEV}:/etc/nginx/conf.d/nginx-dev.conf:Z"

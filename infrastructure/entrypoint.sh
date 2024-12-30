@@ -6,15 +6,6 @@
 # Author: Ke An Nguyen
 ############################################################################
 
-#######################################################
-# Define the container name for dev local & production
-#######################################################
-export APP_DEV_CONTAINER="app-dev"
-export NGINX_REVERSE_PROXY_DEV_CONTAINER="nginx-reverse-proxy-dev"
-export DATABASE_CONTAINER="postgres-db"
-
-export BACKEND_PROD_CONTAINER="backend-prod" 
-export NGINX_REVERSE_PROXY_PROD_CONTAINER="nginx-reverse-proxy-prod" # The frontend is served as public files direcly on nginx container
 
 ##################
 # Folder location
@@ -34,12 +25,8 @@ CERT_FILE="certificate.crt"
 KEY_FILE="private.key"
 
 # Location of nginx files
-NGINX_DEV_TEMPLATE="${ROOT_PROJECT}/infrastructure/nginx/nginx-dev.template.conf"
-NGINX_PROD_TEMPLATE="${ROOT_PROJECT}/infrastructure/nginx/nginx-prod.template.conf"
 NGINX_DEV="${ROOT_PROJECT}/infrastructure/nginx/nginx-dev.conf"
 export NGINX_DEV
-NGINX_PROD="${ROOT_PROJECT}/infrastructure/nginx/nginx-prod.conf"
-export NGINX_PROD
 
 # Location of docker files
 DOCKER_COMPOSE_DEV="${ROOT_PROJECT}/infrastructure/docker/docker-compose.local.yml"
@@ -191,8 +178,6 @@ clean_app() {
     sudo rm -rf node_modules packages/*/node_modules packages/*/dist
     sudo rm -rf packages/backend/tsoa
     sudo rm pnpm-lock.yaml .pnpm-store
-    sudo rm -f "${NGINX_DEV}"
-    sudo rm -f "${NGINX_PROD}"
     sudo docker volume remove postgres_data
     echo "node_modules, dist, nginx config files, postgres_data volume removed successfully !"
   fi
@@ -206,12 +191,11 @@ sync_env_files() {
 # Function to run the application in production mode
 run_prod() {
   sync_env_files
-  export DOCKER_PROD_ENTRY_CMD="pnpm i && pnpm run dev"
-  envsubst "${BACKEND_PROD_CONTAINER}" < "${NGINX_PROD_TEMPLATE}" > "${NGINX_PROD}"
+  export DOCKER_PROD_ENTRY_CMD="pnpm i && pnpm run dev:backend"
   pnpm run build # build the frontend and mount to docker that runs nginx so that nginx can serve public fe file.
   docker compose -f "${DOCKER_COMPOSE_PROD}" build --no-cache
   docker compose -f "${DOCKER_COMPOSE_PROD}" up --remove-orphans -d
-  docker compose -f "${DOCKER_COMPOSE_PROD}" logs -f app-backend-prod -f nginx-reverse-proxy-prod
+  docker compose -f "${DOCKER_COMPOSE_PROD}" logs -f app-backend-prod
   docker compose -f "${DOCKER_COMPOSE_PROD}" down -t 1
 }
 
@@ -220,8 +204,6 @@ run_dev() {
   sync_env_files
   # DOCKER_DEV_ENTRY_CMD will be used in DOCKER_COMPOSE_DEV file as an entry point to run the application in dev env
   export DOCKER_DEV_ENTRY_CMD="pnpm i && pnpm run dev"
-  # Populate the env variable value of APP_DEV_CONTAINER for APP_DEV_CONTAINER variable in NGINX_DEV_TEMPLATE, the output file will be NGINX_DEV
-  envsubst '${APP_DEV_CONTAINER}' < "${NGINX_DEV_TEMPLATE}" > "${NGINX_DEV}"
   mkdir -p node_modules
   docker compose -f "${DOCKER_COMPOSE_DEV}" build --no-cache
   docker compose -f "${DOCKER_COMPOSE_DEV}" up --remove-orphans -d
@@ -261,7 +243,6 @@ elif [[ "$1" = "dev" ]]; then
   exit 0
 
 elif [[ "$1" = "prod" ]]; then
-  clean_app
   check_prerequisite
 
   # Check if check_prerequisite exited successfully (exit code 0)
