@@ -6,12 +6,15 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "-------- Dev scripts --------": "",
-    "dev": "pnpm run prisma:create_tables && pnpm run prisma:generate_client && nodemon --watch 'src/**/*' --ext ts --exec 'pnpm run build:tsoa && ts-node --project tsconfig.json src/server.ts'",
+    "dev": "pnpm run prisma:dev && pnpm run prisma:generate_client && nodemon --watch 'src/**/*' --ext ts --exec 'pnpm run build:tsoa && ts-node --project tsconfig.json src/server.ts'",
+    "-------- Prod scripts --------": "",
+    "prod": "pnpm run prisma:deploy && pnpm run prisma:generate_client && nodemon --watch 'src/**/*' --ext ts --exec 'pnpm run build:tsoa && ts-node --project tsconfig.json src/server.ts'",
     "-------- Build scripts --------": "",
     "build:tsoa": "tsoa spec-and-routes",
     "-------- Other scripts --------": "",
-    "prisma:create_tables": "prisma migrate dev --name create_tables",
-    "prisma:generate_client": "prisma generate"
+    "prisma:dev": "prisma migrate dev --name create_tables",
+    "prisma:generate_client": "prisma generate",
+    "prisma:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@app/shared-models": "workspace:*",
