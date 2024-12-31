@@ -191,7 +191,6 @@ sync_env_files() {
 
 # Function to run the application in production mode
 run_prod() {
-  clean_app
   sync_env_files
   pnpm run build
   export DOCKER_PROD_ENTRY_CMD="pnpm i && pnpm run prod"
@@ -250,6 +249,7 @@ elif [[ "$1" = "prod" ]]; then
 
   # Check if check_prerequisite exited successfully (exit code 0)
   if [[ $? -eq 0 ]]; then
+    clean_app
     run_prod
   else
     echo "Prerequisites not met. Exiting."
