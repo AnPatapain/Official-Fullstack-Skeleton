@@ -34,6 +34,8 @@ jobs:
       - name: SSH into server and sync the source code
         run: |
           ssh VPS_SERVER << EOF
+            eval "$(ssh-agent -s)"
+            ssh-add ~/.ssh/github
             cd ~/Official-Fullstack-Skeleton
             git reset --hard
             git clean -fd
