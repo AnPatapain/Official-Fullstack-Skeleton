@@ -104,14 +104,14 @@ check_prerequisite() {
     exit 1
   fi
 
-  # Check pnpm is installed
-  if ! command -v pnpm &>/dev/null; then
-      echo "Result: Prerequisites are not met!"
-      echo ""
-      echo "Reason: pnpm is not installed."
-      echo "To fix: please install pnpm by following the instructions at https://pnpm.io/installation."
-      exit 1
-  fi
+#  # Check pnpm is installed
+#  if ! command -v pnpm &>/dev/null; then
+#      echo "Result: Prerequisites are not met!"
+#      echo ""
+#      echo "Reason: pnpm is not installed."
+#      echo "To fix: please install pnpm by following the instructions at https://pnpm.io/installation."
+#      exit 1
+#  fi
 
   # Check .env exist and has required environment variable
   if [[ ! -f "${ROOT_PROJECT}/.env" ]]; then
