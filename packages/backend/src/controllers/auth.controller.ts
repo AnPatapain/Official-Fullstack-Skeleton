@@ -2,7 +2,7 @@ import {Body, Controller, Get, NoSecurity, Post, Query, Request, Res, Route, Sec
 import {type LoginRequest, type UserCreationRequest} from "@app/shared-models/src/api.type";
 import {UserRepository} from "../repositories/user.repository";
 import {APIErrorType} from "@app/shared-models/src/error.type";
-import {generateAndReturnToken, generatePasswordHashed, verifyPassword, verifyToken} from "../services/auth.service";
+import {generateAndReturnToken, generatePasswordHashed, verifyPassword} from "../services/auth.service";
 import {sendEmail} from "../services/mail.service";
 import express from "express";
 import {User} from "@app/shared-models/src/user.model";
@@ -84,10 +84,15 @@ export class AuthController extends Controller {
                 code: 'ERR_USER_NOT_VERIFIED'
             });
         }
-        return await generateAndReturnToken({
+
+        const token = await generateAndReturnToken({
             userId: user.id,
             tokenType: 'api'
         });
+
+        return {
+            apiAccessToken: token
+        };
     }
 
     ////////////////////
