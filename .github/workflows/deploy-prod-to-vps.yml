@@ -36,6 +36,7 @@ jobs:
           ssh VPS_SERVER << EOF
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/github
+            ssh-add -l
             cd ~/Official-Fullstack-Skeleton
             git reset --hard
             git clean -fd
