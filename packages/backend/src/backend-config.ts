@@ -30,6 +30,4 @@ export const CONFIG: typeof env= {
     HMAC_SECRET: 'devsecret',
     PUBLIC_URL: 'https://localhost',
     ...env,
-    SMTP_HOST: env.NODE_ENV === 'development' ? 'mailhog' : env.SMTP_HOST,
-    SMTP_PORT: env.NODE_ENV === 'development' ? '1025' : env.SMTP_PORT
 }

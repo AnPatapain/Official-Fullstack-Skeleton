@@ -26,7 +26,7 @@ export class AuthController extends Controller {
         if (user) {
             throw errUserAlreadyExisted(409, {
                 code: 'ERR_USER_ALREADY_EXISTS'
-            })
+            });
         }
         const hashedPassword = generatePasswordHashed(requestBody.password);
 
@@ -36,9 +36,12 @@ export class AuthController extends Controller {
             verified: false,
         });
 
-        await this._sendVerificationEmail(createdUser);
+        const mailPreviewUrl = await this._sendVerificationEmail(createdUser);
 
-        return createdUser;
+        return {
+            createdUser: createdUser,
+            mailPreviewUrl: mailPreviewUrl,
+        };
     }
 
     @Get('verify')
@@ -97,7 +100,7 @@ export class AuthController extends Controller {
 
         const verificationEndpoint = `${CONFIG.PUBLIC_URL}/api/auth/verify?token=${verificationToken}`;
 
-        sendEmail(
+        return await sendEmail(
             user.email,
             'Verify account',
             `Click this link to verify account: ${verificationEndpoint}`,

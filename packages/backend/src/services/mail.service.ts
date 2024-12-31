@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import nodemailer, {SentMessageInfo} from 'nodemailer';
 import {CONFIG} from "../backend-config";
 
 const transporter = nodemailer.createTransport({
@@ -20,9 +20,17 @@ export function sendEmail(targetEmail: string, subject: string, text: string, ht
         html: html,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.error("Error sending email: ", error);
-        }
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(mailOptions, (error: Error | null, info: SentMessageInfo) => {
+            if (error) {
+                console.error("Error sending email: ", error);
+                reject(error);
+            } else {
+                console.log('Message sent: %s', info.messageId);
+                console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                const mailPreviewUrl = nodemailer.getTestMessageUrl(info)?.toString() || '';
+                resolve(mailPreviewUrl);
+            }
+        });
     });
 }
