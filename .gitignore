@@ -16,6 +16,7 @@ dist-ssr
 data
 packages/backend/.env
 .env
+packages/backend/tsoa
 
 # Editor directories and files
 .vscode/*

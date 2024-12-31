@@ -1,6 +1,6 @@
 import express, {json, Request, Response, urlencoded} from "express";
 import {RegisterRoutes} from "../tsoa/routes";
-import swaggerDocument from "../tsoa/swagger.json" assert {type: "json"};
+import swaggerDocument from "../tsoa/swagger.json" with { type: "json" };;
 import swaggerUi from "swagger-ui-express";
 import {seed} from "./seed";
 import {CONFIG} from "./backend-config";

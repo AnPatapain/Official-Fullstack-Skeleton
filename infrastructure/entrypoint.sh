@@ -177,7 +177,8 @@ clean_app() {
     docker compose -f "${DOCKER_COMPOSE_PROD}" down -t 1 --volumes
     sudo rm -rf node_modules packages/*/node_modules packages/*/dist
     sudo rm -rf packages/backend/tsoa
-    sudo rm pnpm-lock.yaml .pnpm-store
+    sudo rm pnpm-lock.yaml
+    sudo rm -rf .pnpm-store
     sudo docker volume remove postgres_data
     echo "node_modules, dist, nginx config files, postgres_data volume removed successfully !"
   fi
@@ -190,8 +191,11 @@ sync_env_files() {
 
 # Function to run the application in production mode
 run_prod() {
+  clean_app
   sync_env_files
+  pnpm run build
   export DOCKER_PROD_ENTRY_CMD="pnpm i && pnpm run prod"
+  mkdir -p node_modules
   docker compose -f "${DOCKER_COMPOSE_PROD}" build --no-cache
   docker compose -f "${DOCKER_COMPOSE_PROD}" up --remove-orphans -d
   docker compose -f "${DOCKER_COMPOSE_PROD}" logs -f app-backend-prod
