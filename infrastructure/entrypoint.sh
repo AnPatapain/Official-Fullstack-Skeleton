@@ -195,7 +195,6 @@ sync_env_files() {
 
 # Function to build frontend static files
 run_build_fe() {
-  sync_env_files
   pnpm install && pnpm run build
 }
 
@@ -255,29 +254,13 @@ elif [[ "$1" = "dev" ]]; then
   exit 0
 
 elif [[ "$1" = "build-fe" ]]; then
-  check_prerequisite
-
-  # Check if check_prerequisite exited successfully (exit code 0)
-  if [[ $? -eq 0 ]]; then
-    clean_app --force-proceed
-    run_build_fe
-  else
-    echo "Prerequisites not met. Exiting."
-    exit 1
-  fi
+  clean_app --force-proceed
+  run_build_fe
   exit 0
 
 elif [[ "$1" = "prod" ]]; then
-  check_prerequisite
-
-  # Check if check_prerequisite exited successfully (exit code 0)
-  if [[ $? -eq 0 ]]; then
-    clean_app --force-proceed
-    run_prod
-  else
-    echo "Prerequisites not met. Exiting."
-    exit 1
-  fi
+  clean_app --force-proceed
+  run_prod
   exit 0
     
 else

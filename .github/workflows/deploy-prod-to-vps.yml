@@ -7,16 +7,16 @@ on:
     branches:
       - main
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment: production # Specify environment that holds the secrets used in this pipeline
+    environment: production
 
     steps:
       # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up Node.js and install dependencies, build frontend
+      # Set up Node.js and install pnpm for building frontend
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -56,6 +56,31 @@ jobs:
         env:
           SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
+          SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+          SSH_USER: ${{ secrets.VPS_SSH_USER }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production # Specify environment that holds the secrets used in this pipeline
+
+    steps:
+      - name: Configure SSH to VPS server
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/ssh_vps_private.key
+          chmod 600 ~/.ssh/ssh_vps_private.key
+          cat >>~/.ssh/config <<END
+          Host VPS_SERVER
+            HostName $SSH_HOST
+            User $SSH_USER
+            Port $SSH_PORT
+            IdentityFile ~/.ssh/ssh_vps_private.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
           SSH_USER: ${{ secrets.VPS_SSH_USER }}
 
