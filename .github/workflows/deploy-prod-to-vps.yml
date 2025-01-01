@@ -51,6 +51,14 @@ jobs:
           SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
           SSH_USER: ${{ secrets.VPS_SSH_USER }}
 
+      - name: Test ssh
+        run: |
+          ssh VPS_SERVER << EOF
+            cd ~/Official-Fullstack-Skeleton
+            ls
+          EOF
+          
+
       - name: Move frontend built file to the VPS server
         run: |
           scp -P $SSH_PORT -r ./packages/frontend/dist/. $SSH_USER@$SSH_HOST:/var/www/html/ofs
