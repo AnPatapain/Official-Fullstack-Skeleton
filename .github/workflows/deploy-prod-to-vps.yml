@@ -65,7 +65,7 @@ jobs:
           echo "User: $SSH_USER"
           echo "Host: $SSH_HOST"
           ls ~/.ssh
-          scp -v -i ~/.ssh/ssh_vps_private.key -P $SSH_PORT -r ./packages/frontend/dist/. $SSH_USER@$SSH_HOST:/var/www/html/ofs
+          scp -v -i ~/.ssh/ssh_vps_private.key -P "$SSH_PORT" -r ./packages/frontend/dist/* "$SSH_USER@$SSH_HOST:/var/www/html/ofs"
         env:
           SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
