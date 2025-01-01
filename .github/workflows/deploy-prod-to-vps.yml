@@ -33,7 +33,7 @@ jobs:
 
       - name: SSH into server and sync the source code
         run: |
-          ssh VPS_SERVER << EOF
+          ssh -tt VPS_SERVER << EOF
             cd ~/Official-Fullstack-Skeleton
             git reset --hard
             git clean -fd
@@ -42,11 +42,11 @@ jobs:
 
       - name: Start backend process, build frontend files for Nginx (pre-configured reverse proxy on my server)
         run: |
-          ssh VPS_SERVER << EOF
+          ssh -tt VPS_SERVER << EOF
             cd ~/Official-Fullstack-Skeleton
             yes | ./infrastructure/entrypoint.sh prod
             sudo cp -a packages/frontend/dist/. /var/www/html/ofs/
           EOF
 
       - name: Restart Nginx
-        run: ssh VPS_SERVER 'sudo systemctl restart nginx.service'
+        run: ssh -tt VPS_SERVER 'sudo systemctl restart nginx.service'
