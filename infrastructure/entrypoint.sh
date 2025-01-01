@@ -104,14 +104,14 @@ check_prerequisite() {
     exit 1
   fi
 
-#  # Check pnpm is installed
-#  if ! command -v pnpm &>/dev/null; then
-#      echo "Result: Prerequisites are not met!"
-#      echo ""
-#      echo "Reason: pnpm is not installed."
-#      echo "To fix: please install pnpm by following the instructions at https://pnpm.io/installation."
-#      exit 1
-#  fi
+  # Check pnpm is installed
+  if ! command -v pnpm &>/dev/null; then
+      echo "Result: Prerequisites are not met!"
+      echo ""
+      echo "Reason: pnpm is not installed."
+      echo "To fix: please install pnpm by following the instructions at https://pnpm.io/installation."
+      exit 1
+  fi
 
   # Check .env exist and has required environment variable
   if [[ ! -f "${ROOT_PROJECT}/.env" ]]; then
@@ -170,7 +170,11 @@ create_tls_certificates() {
 
 # Function to clean node_modules and dist
 clean_app() {
-  read -r -p "Data on dev database will be lost. Proceed? (y/n): " proceed
+  if [[ "$1" = "--force-proceed" ]]; then
+    local proceed="y"
+  else
+    read -r -p "Data on dev database will be lost. Proceed? (y/n): " proceed
+  fi
 
   if [[ "$proceed" =~ ^[yY]$ ]]; then
     docker compose -f "${DOCKER_COMPOSE_DEV}" down -t 1 --volumes
@@ -231,7 +235,7 @@ elif [[ "$1" = "create-tls-certs" ]]; then
   exit 0
 
 elif [[ "$1" = "clean" ]]; then
-  clean_app
+  clean_app --normal
   exit 0
 
 elif [[ "$1" = "dev" ]]; then
@@ -250,7 +254,7 @@ elif [[ "$1" = "prod" ]]; then
 
   # Check if check_prerequisite exited successfully (exit code 0)
   if [[ $? -eq 0 ]]; then
-    clean_app
+    clean_app --force-proceed
     run_prod
   else
     echo "Prerequisites not met. Exiting."
