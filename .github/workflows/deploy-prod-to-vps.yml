@@ -12,7 +12,26 @@ jobs:
     environment: production # Specify environment that holds the secrets used in this pipeline
 
     steps:
-      - name: Configure SSH
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up Node.js and install dependencies, build frontend
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
+
+      # Build the frontend
+      - name: Build frontend static files
+        run: ./infrastructure/entrypoint.sh build-fe
+
+      - name: Configure SSH to VPS server
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/ssh_vps_private.key
@@ -31,9 +50,18 @@ jobs:
           SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
           SSH_USER: ${{ secrets.VPS_SSH_USER }}
 
+      - name: Move frontend built file to the VPS server
+        run: |
+          scp: -P $SSH_PORT -r ./packages/frontend/dist/. $SSH_USER@SSH_HOST:/var/www/html/ofs
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
+          SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+          SSH_USER: ${{ secrets.VPS_SSH_USER }}
+
       - name: SSH into server and sync the source code
         run: |
-          ssh -tt VPS_SERVER << EOF
+          ssh VPS_SERVER << EOF
             cd ~/Official-Fullstack-Skeleton
             git reset --hard
             git clean -fd
@@ -41,14 +69,21 @@ jobs:
             exit
           EOF
 
-      - name: Start backend process, build frontend files for Nginx (pre-configured reverse proxy on my server)
-        run: |
-          ssh -tt VPS_SERVER << EOF
-            cd ~/Official-Fullstack-Skeleton
-            ./infrastructure/entrypoint.sh prod
-            sudo cp -a packages/frontend/dist/. /var/www/html/ofs/
-            exit
-          EOF
+#      - name: Build frontend static files for Nginx (pre-configured reverse proxy on my server)
+#        run: |
+#          ssh VPS_SERVER << EOF
+#            export PATH="/home/ubuntu/.nvm/versions/node/v22.12.0/bin:$PATH"
+#            cd ~/Official-Fullstack-Skeleton
+#            ./infrastructure/entrypoint.sh build-fe
+#            sudo cp -a packages/frontend/dist/. /var/www/html/ofs/
+#          EOF
+
+#      - name: Start backend process
+#        run: |
+#          ssh VPS_SERVER << EOF
+#            cd ~/Official-Fullstack-Skeleton
+#            ./infrastructure/entrypoint.sh prod
+#          EOF
 
       - name: Restart Nginx
         run: ssh VPS_SERVER 'sudo systemctl restart nginx.service'

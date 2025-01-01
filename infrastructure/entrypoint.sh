@@ -177,8 +177,8 @@ clean_app() {
   fi
 
   if [[ "$proceed" =~ ^[yY]$ ]]; then
-    docker compose -f "${DOCKER_COMPOSE_DEV}" down -t 1 --volumes
-    docker compose -f "${DOCKER_COMPOSE_PROD}" down -t 1 --volumes
+    docker compose -f "${DOCKER_COMPOSE_DEV}" down -t 1 --volumes --remove-orphans
+    docker compose -f "${DOCKER_COMPOSE_PROD}" down -t 1 --volumes --remove-orphans
     sudo rm -rf node_modules packages/*/node_modules packages/*/dist
     sudo rm -rf packages/backend/tsoa
     sudo rm pnpm-lock.yaml
@@ -193,10 +193,15 @@ sync_env_files() {
   ln -sf "${ROOT_PROJECT}"/.env "${ROOT_PROJECT}"/packages/backend/.env
 }
 
+# Function to build frontend static files
+run_build_fe() {
+  sync_env_files
+  pnpm install && pnpm run build
+}
+
 # Function to run the application in production mode
 run_prod() {
   sync_env_files
-  pnpm run build
   export DOCKER_PROD_ENTRY_CMD="pnpm i && pnpm run prod"
   mkdir -p node_modules
   docker compose -f "${DOCKER_COMPOSE_PROD}" build --no-cache
@@ -249,6 +254,19 @@ elif [[ "$1" = "dev" ]]; then
   fi
   exit 0
 
+elif [[ "$1" = "build-fe" ]]; then
+  check_prerequisite
+
+  # Check if check_prerequisite exited successfully (exit code 0)
+  if [[ $? -eq 0 ]]; then
+    clean_app --force-proceed
+    run_build_fe
+  else
+    echo "Prerequisites not met. Exiting."
+    exit 1
+  fi
+  exit 0
+
 elif [[ "$1" = "prod" ]]; then
   check_prerequisite
 
@@ -260,7 +278,6 @@ elif [[ "$1" = "prod" ]]; then
     echo "Prerequisites not met. Exiting."
     exit 1
   fi
-
   exit 0
     
 else

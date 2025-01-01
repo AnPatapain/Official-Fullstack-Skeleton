@@ -59,7 +59,7 @@ importers:
     devDependencies:
       '@types/node':
         specifier: ^22.5.4
-        version: 22.10.2
+        version: 22.10.3
       '@types/nodemailer':
         specifier: ^6.4.17
         version: 6.4.17
@@ -74,7 +74,7 @@ importers:
         version: 6.1.0
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@types/node@22.10.2)(typescript@5.7.2)
+        version: 10.9.2(@types/node@22.10.3)(typescript@5.7.2)
       typescript:
         specifier: ^5.2.2
         version: 5.7.2
@@ -99,16 +99,16 @@ importers:
         version: 18.3.5(@types/react@18.3.18)
       '@vitejs/plugin-basic-ssl':
         specifier: ^1.1.0
-        version: 1.2.0(vite@5.4.11(@types/node@22.10.2))
+        version: 1.2.0(vite@5.4.11(@types/node@22.10.3))
       '@vitejs/plugin-react':
         specifier: ^4.2.1
-        version: 4.3.4(vite@5.4.11(@types/node@22.10.2))
+        version: 4.3.4(vite@5.4.11(@types/node@22.10.3))
       typescript:
         specifier: ^5.2.2
         version: 5.7.2
       vite:
         specifier: ^5.2.0
-        version: 5.4.11(@types/node@22.10.2)
+        version: 5.4.11(@types/node@22.10.3)
 
   packages/shared-models: {}
 
@@ -711,8 +711,8 @@ packages:
   '@types/multer@1.4.12':
     resolution: {integrity: sha512-pQ2hoqvXiJt2FP9WQVLPRO+AmiIm/ZYkavPlIQnx282u4ZrVdztx0pkh3jjpQt0Kz+YI0YhSG264y08UJKoUQg==}
 
-  '@types/node@22.10.2':
-    resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==}
+  '@types/node@22.10.3':
+    resolution: {integrity: sha512-DifAyw4BkrufCILvD3ucnuN8eydUfc/C1GlyrnI+LK6543w5/L3VeVgf05o3B4fqSXP1dKYLOZsKfutpxPzZrw==}
 
   '@types/nodemailer@6.4.17':
     resolution: {integrity: sha512-I9CCaIp6DTldEg7vyUTZi8+9Vo0hi1/T8gv3C89yk1rSAAzoKQ8H8ki/jBYJSFoH/BisgLP8tkZMlQ91CIquww==}
@@ -2510,7 +2510,7 @@ snapshots:
 
   '@types/accepts@1.3.7':
     dependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
 
   '@types/babel__core@7.20.5':
     dependencies:
@@ -2538,11 +2538,11 @@ snapshots:
   '@types/body-parser@1.19.5':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
 
   '@types/content-disposition@0.5.8': {}
 
@@ -2551,13 +2551,13 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/express': 4.17.21
       '@types/keygrip': 1.0.6
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
 
   '@types/estree@1.0.6': {}
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
       '@types/qs': 6.9.17
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.4
@@ -2588,7 +2588,7 @@ snapshots:
       '@types/http-errors': 2.0.4
       '@types/keygrip': 1.0.6
       '@types/koa-compose': 3.2.8
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
 
   '@types/mime@1.3.5': {}
 
@@ -2596,13 +2596,13 @@ snapshots:
     dependencies:
       '@types/express': 4.17.21
 
-  '@types/node@22.10.2':
+  '@types/node@22.10.3':
     dependencies:
       undici-types: 6.20.0
 
   '@types/nodemailer@6.4.17':
     dependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
 
   '@types/prop-types@15.7.14': {}
 
@@ -2622,12 +2622,12 @@ snapshots:
   '@types/send@0.17.4':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
 
   '@types/serve-static@1.15.7':
     dependencies:
       '@types/http-errors': 2.0.4
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
       '@types/send': 0.17.4
 
   '@types/swagger-ui-express@4.1.7':
@@ -2718,18 +2718,18 @@ snapshots:
 
   '@ungap/structured-clone@1.2.1': {}
 
-  '@vitejs/plugin-basic-ssl@1.2.0(vite@5.4.11(@types/node@22.10.2))':
+  '@vitejs/plugin-basic-ssl@1.2.0(vite@5.4.11(@types/node@22.10.3))':
     dependencies:
-      vite: 5.4.11(@types/node@22.10.2)
+      vite: 5.4.11(@types/node@22.10.3)
 
-  '@vitejs/plugin-react@4.3.4(vite@5.4.11(@types/node@22.10.2))':
+  '@vitejs/plugin-react@4.3.4(vite@5.4.11(@types/node@22.10.3))':
     dependencies:
       '@babel/core': 7.26.0
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.0)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.0)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.4.11(@types/node@22.10.2)
+      vite: 5.4.11(@types/node@22.10.3)
     transitivePeerDependencies:
       - supports-color
 
@@ -3746,14 +3746,14 @@ snapshots:
 
   ts-deepmerge@7.0.2: {}
 
-  ts-node@10.9.2(@types/node@22.10.2)(typescript@5.7.2):
+  ts-node@10.9.2(@types/node@22.10.3)(typescript@5.7.2):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
       acorn: 8.14.0
       acorn-walk: 8.3.4
       arg: 4.1.3
@@ -3815,13 +3815,13 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@5.4.11(@types/node@22.10.2):
+  vite@5.4.11(@types/node@22.10.3):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.49
       rollup: 4.29.1
     optionalDependencies:
-      '@types/node': 22.10.2
+      '@types/node': 22.10.3
       fsevents: 2.3.3
 
   which@2.0.2:
