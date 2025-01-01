@@ -56,7 +56,7 @@ jobs:
 
       - name: Move frontend built file to the VPS server
         run: |
-          scp: -P $SSH_PORT -r ./packages/frontend/dist/. $SSH_USER@SSH_HOST:/var/www/html/ofs
+          scp -P $SSH_PORT -r ./packages/frontend/dist/. $SSH_USER@$SSH_HOST:/var/www/html/ofs
         env:
           SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
