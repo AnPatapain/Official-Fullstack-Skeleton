@@ -38,6 +38,15 @@ importers:
       '@types/express':
         specifier: ^4.17.21
         version: 4.17.21
+      '@types/node':
+        specifier: ^22.5.4
+        version: 22.10.3
+      '@types/nodemailer':
+        specifier: ^6.4.17
+        version: 6.4.17
+      '@types/swagger-ui-express':
+        specifier: ^4.1.6
+        version: 4.1.7
       bcryptjs:
         specifier: ^2.4.3
         version: 2.4.3
@@ -50,6 +59,9 @@ importers:
       nodemailer:
         specifier: ^6.9.16
         version: 6.9.16
+      nodemon:
+        specifier: ^3.1.0
+        version: 3.1.9
       prisma:
         specifier: ^6.1.0
         version: 6.1.0
@@ -62,19 +74,6 @@ importers:
       tsoa:
         specifier: ^6.4.0
         version: 6.6.0
-    devDependencies:
-      '@types/node':
-        specifier: ^22.5.4
-        version: 22.10.3
-      '@types/nodemailer':
-        specifier: ^6.4.17
-        version: 6.4.17
-      '@types/swagger-ui-express':
-        specifier: ^4.1.6
-        version: 4.1.7
-      nodemon:
-        specifier: ^3.1.0
-        version: 3.1.9
       typescript:
         specifier: ^5.2.2
         version: 5.7.2

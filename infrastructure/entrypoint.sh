@@ -201,7 +201,7 @@ run_build_fe() {
 # Function to run the application in production mode
 run_prod() {
   sync_env_files
-  export DOCKER_PROD_ENTRY_CMD="pnpm install --include=dev && pnpm run prod"
+  export DOCKER_PROD_ENTRY_CMD="pnpm install && pnpm run prod"
   mkdir -p node_modules
   docker compose -f "${DOCKER_COMPOSE_PROD}" build --no-cache
   docker compose -f "${DOCKER_COMPOSE_PROD}" up --remove-orphans -d

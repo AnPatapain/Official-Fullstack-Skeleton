@@ -30,9 +30,7 @@
     "express": "^4.19.2",
     "nodemailer": "^6.9.16",
     "swagger-ui-express": "^5.0.1",
-    "tsoa": "^6.4.0"
-  },
-  "devDependencies": {
+    "tsoa": "^6.4.0",
     "@types/node": "^22.5.4",
     "@types/nodemailer": "^6.4.17",
     "@types/swagger-ui-express": "^4.1.6",
