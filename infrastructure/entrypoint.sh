@@ -191,6 +191,7 @@ clean_app() {
 # Internal Function to synchronize the env file in ROOT_PROJECT and packages/backend by using symbolic link
 sync_env_files() {
   ln -sf "${ROOT_PROJECT}"/.env "${ROOT_PROJECT}"/packages/backend/.env
+  ln -sf "${ROOT_PROJECT}"/.env "${ROOT_PROJECT}"/packages/frontend/.env
 }
 
 # Function to build frontend static files

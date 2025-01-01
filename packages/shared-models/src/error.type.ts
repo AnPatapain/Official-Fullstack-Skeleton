@@ -36,4 +36,8 @@ export class APIError extends Error {
         }
         return errJson;
     }
+
+    toString(): string {
+        return this.code.toString();
+    }
 }

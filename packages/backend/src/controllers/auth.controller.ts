@@ -79,10 +79,10 @@ export class AuthController extends Controller {
             });
         }
         if (!user.verified) {
-            await this._sendVerificationEmail(user);
-            throw errUserNotVerified(401, {
-                code: 'ERR_USER_NOT_VERIFIED'
-            });
+            const mailPreviewUrl = await this._sendVerificationEmail(user);
+            return {
+                mailPreviewUrl: mailPreviewUrl,
+            }
         }
 
         const token = await generateAndReturnToken({

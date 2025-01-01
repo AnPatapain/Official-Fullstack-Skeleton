@@ -20,6 +20,8 @@ export function sendEmail(targetEmail: string, subject: string, text: string, ht
         html: html,
     };
 
+    console.log('mailOptions::', mailOptions);
+
     return new Promise((resolve, reject) => {
         transporter.sendMail(mailOptions, (error: Error | null, info: SentMessageInfo) => {
             if (error) {

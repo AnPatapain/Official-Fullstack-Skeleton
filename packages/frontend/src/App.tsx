@@ -1,25 +1,18 @@
-import { useEffect, useState } from "react";
-import { apiClient } from "./api-client";
-import {User} from "./DTO/User.ts";
+// App.tsx (Main App Component with Router)
+import { Routes, Route, Link } from 'react-router-dom';
+import { Home } from './pages/Home.tsx';
+import {Auth} from "./pages/Auth.tsx";
 
 export const App = () => {
-    const [users, setUsers] = useState<User[]>([]);
-    
-    useEffect(() => {
-        const fetchData = async () => {
-           const users_ = await apiClient.user.getAll();
-           setUsers(users_);
-        };
-        fetchData();
-    }, [])
-
-    return <div>
-        <h3>Fullstack mern boilerplate powered by: Typescript, Node, React, Docker, Nginx, BashScript.</h3>
-        <p>Users from API</p>
-        {users.length === 0 ? 'Loading message from backend...' :
-        <ul>
-            {users.map((user) => <li>id: {user.id} - email: {user.email} - name: {user.name}</li>)}
-        </ul>}
-    </div>
-}
-
+    return (
+        <div>
+            <nav>
+                <Link to="/">Home</Link> | <Link to="/auth">Signup/Login</Link>
+            </nav>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/auth" element={<Auth />} />
+            </Routes>
+        </div>
+    );
+};
