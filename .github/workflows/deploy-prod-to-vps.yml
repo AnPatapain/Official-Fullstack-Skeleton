@@ -31,15 +31,12 @@ jobs:
       - name: Build frontend static files
         run: ./infrastructure/entrypoint.sh build-fe
 
-      # Install OpenSSH client to enable scp
-      - name: Install SSH client
-        run: sudo apt-get update && sudo apt-get install -y openssh-client
-
       - name: Configure SSH to VPS server
         run: |
           mkdir -p ~/.ssh/
           echo "$SSH_KEY" > ~/.ssh/ssh_vps_private.key
           chmod 600 ~/.ssh/ssh_vps_private.key
+          ssh-keyscan -p $SSH_PORT $SSH_HOST >> ~/.ssh/known_hosts
           cat >>~/.ssh/config <<END
           Host VPS_SERVER
             HostName $SSH_HOST
