@@ -197,8 +197,9 @@ run_prod() {
   mkdir -p node_modules
   docker compose -f "${DOCKER_COMPOSE_PROD}" build --no-cache
   docker compose -f "${DOCKER_COMPOSE_PROD}" up --remove-orphans -d
-  docker compose -f "${DOCKER_COMPOSE_PROD}" logs -f app-backend-prod
-  docker compose -f "${DOCKER_COMPOSE_PROD}" down -t 1
+  echo "Application in containers are now running in detached mode."
+#  docker compose -f "${DOCKER_COMPOSE_PROD}" logs -f app-backend-prod
+#  docker compose -f "${DOCKER_COMPOSE_PROD}" down -t 1
 }
 
 # Function to start Docker Compose in development mode
