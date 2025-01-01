@@ -38,6 +38,7 @@ jobs:
             git reset --hard
             git clean -fd
             git pull origin main
+            exit
           EOF
 
       - name: Start backend process, build frontend files for Nginx (pre-configured reverse proxy on my server)
@@ -46,7 +47,8 @@ jobs:
             cd ~/Official-Fullstack-Skeleton
             yes | ./infrastructure/entrypoint.sh prod
             sudo cp -a packages/frontend/dist/. /var/www/html/ofs/
+            exit
           EOF
 
       - name: Restart Nginx
-        run: ssh -tt VPS_SERVER 'sudo systemctl restart nginx.service'
+        run: ssh VPS_SERVER 'sudo systemctl restart nginx.service'
